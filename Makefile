@@ -18,7 +18,6 @@ test: $(VCD)
 	$(VC) -I $(VSRC_DIR) -I $(VTST_DIR) -o $@ $<
 
 %.vcd: %.vpp
-	echo $^
 	$(VE) $^
 
 clean:
