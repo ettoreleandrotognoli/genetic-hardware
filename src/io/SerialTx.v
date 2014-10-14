@@ -2,7 +2,7 @@
 `define __SERIAL_TX__
 
 
-module SerialTX(clk,rst,ce,D,tx,busy);
+module SerialTx(clk,rst,ce,D,tx,busy);
 
 	parameter Width = 8;
 	parameter TimerWidth = 8;

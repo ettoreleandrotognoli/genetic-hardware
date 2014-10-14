@@ -1,19 +1,19 @@
-`include "io/SerialTX.v"
+`include "io/SerialTx.v"
 
-module SerialTX_tb;
+module SerialTxTest;
 	
 	reg [7:0]data;
 	reg clk,ce,bound;
 	
 	wire tx,busy;
 
-	SerialTX #(8,2)s(clk,1'b0,ce,data,tx,busy);
+	SerialTx #(8,2)s(clk,1'b0,ce,data,tx,busy);
 	
 	integer i;
 
 	initial
 	begin
-		$dumpfile("test/io/SerialTX_tb.vcd");
+		$dumpfile("test/io/SerialTxTest.vcd");
 		$dumpvars(0,s);
 		data =0;
 		clk =0;

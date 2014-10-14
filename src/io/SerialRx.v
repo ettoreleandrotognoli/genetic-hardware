@@ -5,7 +5,7 @@
 `define WAIT 2'b01
 `define READ 2'b10
 
-module SerialRX(clk,rst,rx,Q,finish);
+module SerialRx(clk,rst,rx,Q,finish);
 
 	parameter Width = 8;
 	parameter TimerWidth = 8;
