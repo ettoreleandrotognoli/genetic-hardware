@@ -7,7 +7,7 @@ module SerialTxTest;
 	
 	wire tx,busy;
 
-	SerialTx #(8,2)s(clk,1'b0,ce,data,tx,busy);
+	SerialTx #(.Width(8),.TimerWidth(2))s(clk,1'b0,ce,data,tx,busy);
 	
 	integer i;
 

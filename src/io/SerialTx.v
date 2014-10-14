@@ -2,17 +2,19 @@
 `define __SERIAL_TX__
 
 
-module SerialTx(clk,rst,ce,D,tx,busy);
-
-	parameter Width = 8;
-	parameter TimerWidth = 8;
+module SerialTx #(
+	parameter Width = 8,
+	parameter TimerWidth = 8
+)(
+	input clk,
+	input rst,
+	input ce,
+	input [0:Width-1]D,
+	output tx,
+	output busy
+);
 	
-	input [0:Width-1]D;
-	input ce,clk,rst;
 	reg [TimerWidth-1:0]tmr = {TimerWidth{1'b0}};
-	
-	output tx,busy;
-	
 	reg [Width+4:0]outWire = {1'b1,{Width+3{1'b0}},1'b1};
 	
 	always @(posedge clk or posedge rst)

@@ -5,14 +5,16 @@
 `define WAIT 2'b01
 `define READ 2'b10
 
-module SerialRx(clk,rst,rx,Q,finish);
-
-	parameter Width = 8;
-	parameter TimerWidth = 8;
- 
-	input clk,rst,rx;
-	output reg [Width-1:0]Q = {Width{1'b0}};
-	output reg finish =0;
+module SerialRx #(
+	parameter Width = 8,
+	parameter TimerWidth = 8
+)(
+	input clk,
+	input rst,
+	input rx,
+	output reg [Width-1:0]Q = {Width{1'b0}},
+	output reg finish
+);
 
 	reg [1:0]state = `INIT;
 	reg [Width+1:0]data = {Width+2{1'b1}};
