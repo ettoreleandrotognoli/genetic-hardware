@@ -42,7 +42,7 @@ module SerialTx #(
 				end
 				else
 				begin
-					tmr = (tmr + 1);
+					tmr = (tmr + 1'b1);
 				end
 			end
 		end
