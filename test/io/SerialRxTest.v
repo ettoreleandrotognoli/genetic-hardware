@@ -18,15 +18,26 @@ module SerialRxTest;
 		$dumpvars(0,stx);
 		$dumpvars(0,srx);
 		dtx = 0;
-		ce = 0;
-		rst = 1;
+		ce = 1'b0;
+		rst = 1'b1;
 		#1;
-		rst = 0;
-		for(i=0;i<30;i=i+1)
+		rst = 1'b0;
+		#4;
+		for(i=0;i<10;i=i+1)
 		begin
 			dtx = $random;
-			ce = 1;
-			#3000;
+			ce = 1'b1;
+			#4;
+			while(txBusy == 1'b1)
+			begin
+				#2;
+			end
+			ce = 1'b0;
+			#2;
+			if(dtx != drx)
+			begin
+				$error("error");
+			end
 		end
 		$finish;
 	end

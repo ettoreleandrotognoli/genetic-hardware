@@ -9,35 +9,34 @@ module SerialTx #(
 	input clk,
 	input rst,
 	input ce,
-	input [0:Width-1]D,
+	input [Width-1:0]D,
 	output tx,
 	output busy
 );
 	
 	reg [TimerWidth-1:0]tmr = {TimerWidth{1'b0}};
-	reg [Width+4:0]outWire = {1'b1,{Width+3{1'b0}},1'b1};
+	reg [Width+3:0]outWire = {1'b1,{Width+2{1'b0}},1'b1};
 	
 	always @(posedge clk or posedge rst)
 	begin
 		if(rst)
 		begin
 			tmr = 0;
-			outWire = {1'b1,{Width+3{1'b0}},1'b1};
+			outWire = {{Width+3{1'b0}},1'b1};
 		end
 		else
 		begin
 			if(ce == 1'b1 && busy == 1'b0)
 			begin
-				outWire[1] = 0;
-				outWire[Width+1:2] = D;
-				outWire[Width+4:Width+2] = 3'b111;
+				outWire = {2'b11,D,2'b01};
 				tmr = {TimerWidth{1'b0}};
 			end
 			else if(busy == 1'b1)
 			begin
 				if(tmr == {TimerWidth{1'b1}})
 				begin
-					outWire = {1'b0,outWire[Width+4:1]};
+					//outWire = {1'b0,outWire[Width+3:1]};
+					outWire = outWire >> 1;
 					tmr = {TimerWidth{1'b0}};
 				end
 				else
@@ -49,7 +48,7 @@ module SerialTx #(
 	end
 	
 	assign tx = outWire[0];
-	assign busy = (outWire[Width+4:1] == 0)?1'b0:1'b1;
+	assign busy = (outWire == {{Width+3{1'b0}},1'b1})?1'b0:1'b1;
 
 endmodule
 

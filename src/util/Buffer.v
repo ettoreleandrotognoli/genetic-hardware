@@ -1,3 +1,6 @@
+`ifndef __BUFFER__
+`define __BUFFER__
+
 module Buffer #(
 	parameter Width = 8,
 	parameter Init = 0
@@ -28,3 +31,5 @@ module Buffer #(
 	end
 
 endmodule
+
+`endif

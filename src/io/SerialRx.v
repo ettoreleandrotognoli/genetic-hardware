@@ -26,7 +26,8 @@ module SerialRx #(
 		if(rst)
 		begin
 			state = `INIT;
-			data = {Width+2{1'b1}};
+			//data = {Width+2{1'b1}};
+			data = {Width+2{1'b0}};
 			tmr = {TimerWidth{1'b0}};
 			finish = 0;
 			Q = {Width{1'b0}};
