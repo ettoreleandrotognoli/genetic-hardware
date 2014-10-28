@@ -21,4 +21,4 @@ test: $(VCD)
 	$(VE) $^
 
 clean:
-	rm -f $(call rwildcard,$(VTST_DIR),*.vcd) $(call rwildcard,$(VSRC_DIR),*.v.bak)
+	rm -f $(call rwildcard,$(VTST_DIR),*.vcd) $(call rwildcard,$(VSRC_DIR),*.v.bak) $(call rwildcard,$(VTST_DIR),*.vpp)
