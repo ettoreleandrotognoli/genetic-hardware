@@ -19,8 +19,8 @@ module Pwm #(
 	wire [Resolution-1:0]value[2**AddressWidth-1:0];
 	wire [2**AddressWidth-1:0]bufferSelect = 1'b1 << addr;
 
-	genvar outCounter;
 	generate
+		genvar outCounter;
 		for(outCounter =0;outCounter<2**AddressWidth;outCounter=outCounter+1)
 		begin: _pwm_
 			Buffer #(Resolution,{Resolution{1'b0}}) pwmValue (clk,rst,bufferSelect[outCounter],D,value[outCounter]);
