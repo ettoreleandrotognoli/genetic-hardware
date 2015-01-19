@@ -17,7 +17,7 @@ module SerialRx #(
 );
 
 	reg [1:0]state = `INIT;
-	reg [Width+1:0]data = {Width+2{1'b1}};
+	reg [Width+1:0]data = {Width+2{1'b0}};
 	reg [TimerWidth-1:0]tmr = {TimerWidth{1'b0}};
 
 
@@ -76,7 +76,7 @@ module SerialRx #(
 						end
 						else
 						begin
-							tmr = (tmr +1);
+							tmr = (tmr +1'b1);
 						end
 					end
 				end
