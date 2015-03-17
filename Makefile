@@ -20,5 +20,7 @@ test: $(VCD)
 %.vcd: %.vpp
 	$(VE) $^
 
+clear: clean
+	
 clean:
 	rm -f $(call rwildcard,$(VTST_DIR),*.vcd) $(call rwildcard,$(VSRC_DIR),*.v.bak) $(call rwildcard,$(VTST_DIR),*.vpp)
