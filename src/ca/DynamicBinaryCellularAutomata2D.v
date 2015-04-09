@@ -1,21 +1,18 @@
-`ifndef __BINARY_CELLULAR_AUTOMATA_2D__
-`define __BINARY_CELLULAR_AUTOMATA_2D__
+`ifndef __DYNAMIC_BINARY_CELLULAR_AUTOMATA_2D__
+`define __DYNAMIC_BINARY_CELLULAR_AUTOMATA_2D__
 
-module BinaryCellularAutomata2D #(
-	parameter Rule = 8'b00110010,
+module DynamicBinaryCellularAutomata2D #(
 	parameter Width = 16,
 	parameter Initial= {(Width/2){2'b01}}
 ) (
 	input clk,
 	input rst,
 	input ce,
+	input [7:0]rule,
 	input [Width-1:0]set,
 	output reg [Width-1:0]state = Initial
 );
 
-	wire [7:0]rule = Rule;
-	
-	
 	genvar i;
 	generate
 		for (i=0;i<Width;i=i+1)

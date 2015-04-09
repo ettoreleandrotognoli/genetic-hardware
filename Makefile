@@ -1,7 +1,7 @@
 VC := iverilog #verilog compiler
 VE := vvp #verilog executor
-VSRC_DIR := src/
-VTST_DIR := test/
+VSRC_DIR := src
+VTST_DIR := test
 
 rwildcard=$(wildcard $1$2) $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 
