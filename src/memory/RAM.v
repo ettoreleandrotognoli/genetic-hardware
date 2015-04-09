@@ -23,7 +23,7 @@ module RAM #(
 	generate
 		genvar i;
 		for (i=0;i<2**AddressSize;i=i+1)
-		begin
+		begin : _word_
 			Word
 				#(.Width(Width))
 			word
