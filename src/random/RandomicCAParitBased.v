@@ -52,7 +52,7 @@ module RandomicCAParitBased #(
 	generate
 		genvar i;
 		for (i=0;i<Width;i=i+1)
-		begin
+		begin: __parit__
 			assign random[i] = (i%2)? ^caState[(i+1)*ParitWidth-1:i*ParitWidth]:~^caState[(i+1)*ParitWidth-1:i*ParitWidth];
 		end
 	endgenerate

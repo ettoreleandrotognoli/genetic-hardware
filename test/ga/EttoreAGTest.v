@@ -13,6 +13,8 @@ module EttoreAGTest;
 	reg fitnessFinish;
 	wire [IndividualWidth-1:0]fitnessIndividual;
 	reg [ErrorWidth-1:0]fitnessError;
+	wire [IndividualWidth-1:0]bestIndividual;
+	wire [ErrorWidth-1:0]bestError;
 
 
 	EttoreAG #(
@@ -26,7 +28,9 @@ module EttoreAGTest;
 		.fitnessStart(fitnessStart),
 		.fitnessFinish(fitnessFinish),
 		.fitnessIndividual(fitnessIndividual),
-		.fitnessError(fitnessError)
+		.fitnessError(fitnessError),
+		.bestIndividual(bestIndividual),
+		.bestError(bestError)
 	);
 
 	integer i;
@@ -46,7 +50,7 @@ module EttoreAGTest;
 			fitnessFinish = 1'b0;
 			@(posedge fitnessStart);
 			#20;
-			fitnessError = fitnessIndividual ^ {16{2'b10}};
+			fitnessError = fitnessIndividual ^ {8{4'b1110}};
 			fitnessFinish = 1'b1;
 			#2;
 		end
@@ -61,6 +65,10 @@ module EttoreAGTest;
 		begin
 			#1;
 			clk =~clk;
+			if (bestError == 0)
+			begin
+				$finish;
+			end
 		end
 	end
 

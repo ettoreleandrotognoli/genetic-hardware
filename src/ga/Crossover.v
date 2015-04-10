@@ -4,17 +4,17 @@
 `include "random/RandomicCAParitBased.v"
 
 module Crossover #(
-	parameter InidividualWidth = 32,
-	parameter RotationIndexWidth = $clog2(InidividualWidth),
-	parameter CrossMaskIndexWidth = $clog2(InidividualWidth)
+	parameter IndividualWidth = 32,
+	parameter RotationIndexWidth = $clog2(IndividualWidth),
+	parameter CrossMaskIndexWidth = $clog2(IndividualWidth)
 ) (
 	input clk,
 	input rst,
 	input ce,
-	input [InidividualWidth-1:0]dad,
-	input [InidividualWidth-1:0]mom,
-	output [InidividualWidth-1:0]son,
-	output [InidividualWidth-1:0]daughter
+	input [IndividualWidth-1:0]dad,
+	input [IndividualWidth-1:0]mom,
+	output [IndividualWidth-1:0]son,
+	output [IndividualWidth-1:0]daughter
 );
 
 RandomicCAParitBased #(
@@ -31,9 +31,9 @@ randomRotation (
 wire [CrossMaskIndexWidth-1:0]crossMaskIndex;
 wire [RotationIndexWidth-1:0]rotationIndex;
 
-wire [InidividualWidth-1:0]beforeRotateCrossMask = ({InidividualWidth{1'b1}} << crossMaskIndex);
-wire [InidividualWidth*3-1:0]rotatedCrossMask = {beforeRotateCrossMask,beforeRotateCrossMask,beforeRotateCrossMask} << rotationIndex;
-wire [InidividualWidth-1:0]crossMask =	rotatedCrossMask[InidividualWidth*2-1:InidividualWidth];
+wire [IndividualWidth-1:0]beforeRotateCrossMask = ({IndividualWidth{1'b1}} << crossMaskIndex);
+wire [IndividualWidth*3-1:0]rotatedCrossMask = {beforeRotateCrossMask,beforeRotateCrossMask,beforeRotateCrossMask} << rotationIndex;
+wire [IndividualWidth-1:0]crossMask =	rotatedCrossMask[IndividualWidth*2-1:IndividualWidth];
 
 
 assign daughter = ((dad & crossMask) | (mom & ~crossMask ));
