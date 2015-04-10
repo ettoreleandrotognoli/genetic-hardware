@@ -15,7 +15,7 @@ module RAMTest;
 	RAM
 		#(.Width(Width),.AddressSize(AddressSize))
 	ram
-		(clk,rst,we,addr,D,Q);
+		(.clk(clk),.rst(rst),.we(we),.waddr(addr),.D(D),.raddr(addr),.Q(Q));
 
 
 	integer i;
