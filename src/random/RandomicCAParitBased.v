@@ -30,10 +30,10 @@ module RandomicCAParitBased #(
 	)
 	automata (
 		.clk(clk),
-		.rst(1'b0),
+		.rst(rst),
 		.ce(ce),
 		.rule(rule),
-		//($random[CAWidth-1:0] | $random[CAWidth-1:0]),
+		.set({CAWidth/2{2'b01}}),
 		.state(caState)
 	);
 
