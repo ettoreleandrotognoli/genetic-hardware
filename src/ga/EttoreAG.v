@@ -3,7 +3,7 @@
 
 `include "ga/IndividualsCache.v"
 `include "ga/Crossover.v"
-`include "random/RandomicCAParitBased.v"
+`include "random/RandomicLCA.v"
 `include "util/Queue2To1.v"
 `include "memory/DirectCache.v"
 
@@ -49,13 +49,24 @@ wire [IndividualWidth-1:0]momIndividual;
 wire [IndividualWidth-1:0]sonIndividual;
 wire [IndividualWidth-1:0]daughterIndividual;
 
-RandomicCAParitBased #(
+/*RandomicCAParitBased #(
 	.Width(PopulationAddressWidth*2)
 )
 randomicSelector(
 	.clk(clk),
 	.rst(rst),
 	.ce(~fitnessQueueFull),
+	.random({dadAddress,momAddress})
+);*/
+
+RandomicLCA #(
+	.Width(PopulationAddressWidth*2)
+)
+randomicSelector(
+	.clk(clk),
+	.rst(rst),
+	.ce(~fitnessQueueFull),
+	.seed({PopulationAddressWidth{32'b11000000100010010101111010000001}}),
 	.random({dadAddress,momAddress})
 );
 
@@ -90,13 +101,14 @@ fitnessQueue(
 	.full(fitnessQueueFull)
 );
 
-RandomicCAParitBased #(
+RandomicLCA #(
 	.Width(IndividualWidth*3)
 )
 randomicMutation(
 	.clk(clk),
 	.rst(rst),
 	.ce(~fitnessQueueVoid & fitnessCacheHit),
+	.seed({IndividualWidth*3/32{32'b11000000100010010101111010000001}}),
 	.random(randomMutation)
 );
 
@@ -109,11 +121,10 @@ wire [IndividualWidth-1:0]mutationMask =
 wire[IndividualWidth-1:0]toMutateInidividual;
 wire [IndividualWidth-1:0]toTestIndividual = toMutateInidividual ^ mutationMask;
 wire [ErrorWidth-1:0]cachedError;
-wire [ErrorWidth-1:0]fitnessError;
 wire fitnessCacheHit;
 wire fitnessCacheMiss;
 
-assign fitnessStart = fitnessCacheMiss & ~fitnessQueueVoid & ~fitnessFinish;
+assign fitnessStart = fitnessCacheMiss & ~fitnessQueueVoid;// ;& ~fitnessFinish;
 assign fitnessIndividual = toTestIndividual;
 
 DirectCache #(
