@@ -8,7 +8,8 @@
 module SerialTXPackage #(
 	parameter AddressWidth = 2,
 	parameter WordWidth = 8,
-	parameter SerialTimerWidth = 8
+	parameter SerialTimerWidth = 8,
+	parameter QueueAddressWidth = 3
 ) (
 	input clk,
 	input rst,
@@ -39,7 +40,7 @@ module SerialTXPackage #(
 		(.clk(clk),.rst(rst),.ce(txCe),.D(txData),.tx(tx),.busy(txBusy));
 
 	Queue
-		#(.Width(WordWidth),.AddressWidth(8))
+		#(.Width(WordWidth),.AddressWidth(QueueAddressWidth))
 	queue 
 		(.clk(~clk),.rst(rst),.push(queuePush),.pull(queuePull),.D(queueD),.Q(queueQ),.void(queueVoid),.full(queueFull));
 
