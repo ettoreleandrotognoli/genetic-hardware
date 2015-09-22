@@ -30,13 +30,13 @@ module DebugMorphologicGeneticAlgorithm #(
 		8'b00000000,
 		8'b00010000,
 		8'b00000000,
-		8'b00000000,
+		8'b00000000
 	};
 	reg [ImageWidth*ImageHeight-1:0]objetive = {
 		8'b00111000,
 		8'b01111100,
 		8'b00111000,
-		8'b00010000,
+		8'b00010000
 	};
 	wire [IndividualWidth-1:0]bestIndividual;
 	wire [ErrorWidth-1:0]bestError;
@@ -118,7 +118,7 @@ module DebugMorphologicGeneticAlgorithm #(
 	SerialTXPackage
 		#(.AddressWidth(3),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(3))
 	serialTx
-		(serialClk,rst,1'b1,{counter,bestIndividual},tx,txBusy);
+		(serialClk,rst,finish&~txBusy,{counter,bestIndividual},tx,txBusy);
 
 
 
