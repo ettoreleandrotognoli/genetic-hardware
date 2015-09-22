@@ -75,7 +75,7 @@ module SerialTXPackage #(
 				work = 1'b0;
 			end
 			else begin
-				counter = counter + 1;
+				counter = counter + 1'b1;
 			end
 		end
 	end

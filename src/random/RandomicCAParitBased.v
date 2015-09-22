@@ -45,7 +45,7 @@ module RandomicCAParitBased #(
 		end
 		else if (ce)
 		begin
-			counter = counter + 1;
+			counter = counter + 1'b1;
 		end
 	end
 

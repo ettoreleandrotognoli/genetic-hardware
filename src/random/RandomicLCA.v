@@ -45,7 +45,7 @@ module RandomicLCA #(
 		else if (ce)
 		begin
 			random = {random[Width-2:0],random[Width-1]} ^ caState;
-			counter = counter + 1 + ^caState;
+			counter = counter + 1'b1 + ^caState;
 			//$monitor("%d",caState);
 		end
 	end

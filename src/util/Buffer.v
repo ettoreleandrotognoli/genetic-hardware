@@ -14,7 +14,7 @@ module Buffer #(
 
 
 	
-	reg [Width-1 : 0] data = Init;
+	reg [Width-1 : 0] data = Init[Width-1 : 0];
 	
 	assign Q = data;
 	
@@ -22,7 +22,7 @@ module Buffer #(
 	begin
 		if (rst)
 		begin
-			data = Init;
+			data = Init[Width-1:0];
 		end
 		else if(ce)
 		begin

@@ -56,7 +56,7 @@ begin
 	else
 	if (ce)
 	begin
-		opCounter = opCounter + 1;
+		opCounter = opCounter + 1'b1;
 		imageAcc = logicResult;
 	end
 end

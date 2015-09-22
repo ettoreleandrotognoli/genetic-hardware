@@ -13,7 +13,7 @@ module DebugMorphologicGeneticAlgorithm #(
 	parameter ImageHeight = 4,
 	parameter ErrorWidth = $clog2(ImageHeight*ImageWidth),
 	parameter OpcodeWidth = 16,
-	parameter OpCounterWidth = 2,
+	parameter OpCounterWidth = 1,
 	parameter InstructionWidth = OpcodeWidth * (2**OpCounterWidth),
 	parameter IndividualWidth = InstructionWidth
 ) (
@@ -33,10 +33,10 @@ module DebugMorphologicGeneticAlgorithm #(
 		8'b00000000,
 	};
 	reg [ImageWidth*ImageHeight-1:0]objetive = {
-		8'b00010000,
+		8'b00111000,
+		8'b01111100,
 		8'b00111000,
 		8'b00010000,
-		8'b00000000,
 	};
 	wire [IndividualWidth-1:0]bestIndividual;
 	wire [ErrorWidth-1:0]bestError;
@@ -116,9 +116,9 @@ module DebugMorphologicGeneticAlgorithm #(
 	end
 
 	SerialTXPackage
-		#(.AddressWidth(2),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(3))
+		#(.AddressWidth(3),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(3))
 	serialTx
-		(serialClk,rst,~finish & ~txBusy,counter,tx,txBusy);
+		(serialClk,rst,1'b1,{counter,bestIndividual},tx,txBusy);
 
 
 

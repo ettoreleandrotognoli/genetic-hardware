@@ -32,7 +32,7 @@ wire [ErrorWidth-1:0]fitnessError;
 EttoreAG #(
 	.ErrorWidth(ErrorWidth),
 	.IndividualWidth(IndividualWidth),
-	.PopulationAddressWidth(5)
+	.PopulationAddressWidth(4)
 )
 ag(
 	.clk(clk),

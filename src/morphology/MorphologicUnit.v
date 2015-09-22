@@ -22,7 +22,7 @@ assign {ceDilate,swapDilate,ceErode,swapErode} =
 	op == 3'b100 ? 4'b1111: //ero dil
 	op == 3'b101 ? 4'b1011: //dil dil
 	op == 3'b110 ? 4'b1110: //ero ero
-	op == 3'b111 ? 4'b0000:0; //bypass
+	op == 3'b111 ? 4'b0000:4'b0000; //bypass
 
 wire [ImageWidth*ImageHeight-1:0]image = img;
 wire [8:0]element = el;
