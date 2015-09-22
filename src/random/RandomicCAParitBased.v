@@ -6,7 +6,7 @@
 
 module RandomicCAParitBased #(
 	parameter Width = 32,
-	parameter ParitWidth = 3,
+	parameter ParitWidth = 2,
 	parameter CAWidth = Width * ParitWidth
 
 ) (
@@ -33,7 +33,7 @@ module RandomicCAParitBased #(
 		.rst(rst),
 		.ce(ce),
 		.rule(rule),
-		.set({CAWidth/2{2'b01}}),
+		.set({{CAWidth/2{1'b0}},{CAWidth/4{2'b01}}}),
 		.state(caState)
 	);
 
@@ -53,7 +53,9 @@ module RandomicCAParitBased #(
 		genvar i;
 		for (i=0;i<Width;i=i+1)
 		begin: __parit__
-			assign random[i] = (i%2)? ^caState[(i+1)*ParitWidth-1:i*ParitWidth]:~^caState[(i+1)*ParitWidth-1:i*ParitWidth];
+			assign random[i] = (i%2)?
+				^caState[(i+1)*ParitWidth-1:i*ParitWidth]:
+				~^caState[(i+1)*ParitWidth-1:i*ParitWidth];
 		end
 	endgenerate
 

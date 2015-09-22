@@ -19,10 +19,12 @@ module MorphologicGeneticAlgorithm #(
 	input [ImageHeight*ImageWidth-1:0]origin,
 	input [ImageWidth*ImageHeight-1:0]objetive,
 	output [IndividualWidth-1:0]bestIndividual,
-	output [ErrorWidth-1:0]bestError
+	output [ErrorWidth-1:0]bestError,
+	output cycle
 );
 
 wire fitnessStart;
+assign cycle = fitnessStart;
 wire fitnessFinish;
 wire [IndividualWidth-1:0]fitnessIndividual;
 wire [ErrorWidth-1:0]fitnessError;

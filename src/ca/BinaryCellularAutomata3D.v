@@ -19,9 +19,6 @@ module BinaryCellularAutomata3D #(
 	output reg [Width*Height-1:0]state
 );
 
-	wire [9:0]surviveRule = {survive,1'b0};
-	wire [9:0]rizeRule = {rize,1'b0};
-
 	genvar l,c,beforeLine,afterLine,beforeColumn,afterColumn;
 	generate
 		for (l=0;l<Height;l=l+1)
@@ -33,7 +30,7 @@ module BinaryCellularAutomata3D #(
 					state[`beforeLine*Width + c] +
 					state[`beforeLine*Width + `afterColumn] +
 					state[l*Width + `beforeColumn] +
-					state[l*Width + c] +
+					//state[l*Width + c] +
 					state[l*Width + `afterColumn] +
 					state[`afterLine*Width + `beforeColumn]+
 					state[`afterLine*Width + c] +
@@ -46,7 +43,8 @@ module BinaryCellularAutomata3D #(
 					end
 					else if (clk)
 					begin
-						state[l*Width+c] = surviveRule[sum] | surviveRule[sum];
+						state[l*Width+c] =
+							state[l*Width + c] & survive[sum] | rise[sum];
 					end
 				end	
 			end

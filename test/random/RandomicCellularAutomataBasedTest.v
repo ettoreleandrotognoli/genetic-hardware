@@ -1,11 +1,11 @@
 `include "random/RandomicCellularAutomataBased.v"
 
 module RandomicCellularAutomataBasedTest;
-	parameter Width = 32;
+	parameter Width = 8;
 	reg clk;
 	reg rst;
 	reg ce;
-	reg [Width-1:0]seed;
+	reg [Width*Width-1:0]seed;
 	wire [Width-1:0]random;
 
 	RandomicCellularAutomataBased
@@ -18,9 +18,9 @@ module RandomicCellularAutomataBasedTest;
 	begin
 		$dumpfile("test/random/RandomicCellularAutomataBasedTest.vcd");
 		$dumpvars(0,randomic);
-		#1;
 		clk = 1'b0;
-		seed = $random;
+		seed = {$random,$random,$random} | {$random,$random,$random};
+		$monitor("%b",seed);
 		rst = 1'b1;
 		ce = 1'b0;
 		#1;
@@ -30,6 +30,10 @@ module RandomicCellularAutomataBasedTest;
 		for (i=0;i<10000;i=i+1)
 		begin
 			clk = ~clk;#1;
+			if (i%2)
+			begin
+				$monitor("%d",random);
+			end
 		end
 		$finish;
 	end

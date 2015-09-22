@@ -4,7 +4,7 @@
 module RandomicCAParitBasedTest;
 
 	parameter Width = 8;
-	parameter ParitWidth = 3;
+	parameter ParitWidth = 4;
 
 	reg clk;
 	reg rst;
@@ -34,7 +34,7 @@ module RandomicCAParitBasedTest;
 		#1;
 		rst = 1'b0;
 		ce = 1'b1;
-		#1000;
+		#10000;
 		$finish;
 	end
 
@@ -45,6 +45,10 @@ module RandomicCAParitBasedTest;
 		begin
 			#1;
 			clk = ~clk;
+			if (clk)
+			begin
+				$monitor("%d",random);
+			end
 		end
 	end
 

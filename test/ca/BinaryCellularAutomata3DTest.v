@@ -3,8 +3,8 @@
 
 module BinaryCellularAutomata3DTest;
 
-	parameter Width = 8;
-	parameter Height = 8;
+	parameter Width = 4;
+	parameter Height = 4;
 
 	reg clk;
 	reg rst;
