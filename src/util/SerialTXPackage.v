@@ -47,7 +47,7 @@ module SerialTXPackage #(
 	Multiplex
 		#(.Width(WordWidth),.AddressSize(AddressWidth))
 	mux
-		(.D(dataBuffer),.S(counter),.Q(queueD));
+		(.D(dataBuffer),.S(~counter),.Q(queueD));
 
 	assign busy = work;
 	assign txCe =  ~queueVoid & ~txBusy;
