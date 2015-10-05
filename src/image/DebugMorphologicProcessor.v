@@ -16,17 +16,9 @@ module DebugMorphologicProcessor #(
 	output tx
 );
 
-reg [ImageWidth*ImageHeight-1:0]image = {
-	8'b00000000,
-	8'b00110000,
-	8'b00011000,
-	8'b00000000
-};
+reg [ImageWidth*ImageHeight-1:0]image;
 
-reg [31:0]opcodes = {
-	{9'b010111010,3'b001,1'b0,3'b001},
-	{9'b010010010,3'b011,1'b1,3'b011}
-};
+reg [31:0]opcodes;
 
 wire [8:0]el;
 wire [2:0]morphOp;
@@ -45,6 +37,16 @@ always @(negedge clk or posedge rst) begin
 	if (rst) begin
 		ce = 1'b1;
 		serialCe = 1'b0;
+		image = {
+			8'b00000000,
+			8'b00110000,
+			8'b00011000,
+			8'b00000000
+		};
+		opcodes = {
+			{9'b010111010,3'b001,1'b0,3'b001},
+			{9'b010010010,3'b001,1'b0,3'b001}
+		};
 	end
 	else if (~clk) begin
 		if(opCounter == 1'b0 && ce == 1'b1)

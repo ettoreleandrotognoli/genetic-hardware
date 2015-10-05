@@ -26,18 +26,8 @@ module DebugMorphologicGeneticAlgorithm #(
 	output finish
 );
 
-	reg [ImageHeight*ImageWidth-1:0]origin = {
-		8'b00000000,
-		8'b00010000,
-		8'b00000000,
-		8'b00000000
-	};
-	reg [ImageWidth*ImageHeight-1:0]objetive = {
-		8'b00111000,
-		8'b01111100,
-		8'b00111000,
-		8'b00010000
-	};
+	reg [ImageHeight*ImageWidth-1:0]origin;
+	reg [ImageWidth*ImageHeight-1:0]objetive;
 	wire [IndividualWidth-1:0]bestIndividual;
 	wire [ErrorWidth-1:0]bestError;
 	wire cycle;
@@ -102,23 +92,52 @@ module DebugMorphologicGeneticAlgorithm #(
 		.O(error)
 	);*/
 
-	assign finish = bestError==0?1'b1:1'b0;
-	wire running = bestError != {ErrorWidth{1'b0}};
+	wire running = bestError!={ErrorWidth{1'b0}};
+	assign finish = ~running;
+	
 	reg [31:0] counter = {32{1'b0}};
+	reg serialCe;
 
 	always @(posedge cycle or posedge rst) begin
 		if (rst) begin
 			counter = {32{1'b0}};
+			
+			origin = {
+				8'b00000000,
+				8'b00010000,
+				8'b00000000,
+				8'b00000000
+			};
+			objetive = {
+				8'b00111000,
+				8'b01111100,
+				8'b00111000,
+				8'b00010000
+			};
 		end
-		else if (running) begin
+		else begin
 			counter = counter + 1;
+		end
+	end
+	
+	always @(posedge clk or posedge rst) begin
+		if (rst) begin
+			serialCe = 1'b0;
+		end
+		else if(~serialCe & ~running)
+		begin
+			serialCe = 1'b1;
+		end
+		else if(serialCe & ~running & txBusy)
+		begin
+			serialCe = 1'b0;
 		end
 	end
 
 	SerialTXPackage
 		#(.AddressWidth(3),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(3))
 	serialTx
-		(serialClk,rst,finish&~txBusy,{counter,bestIndividual},tx,txBusy);
+		(serialClk,rst,serialCe,{counter,bestIndividual},tx,txBusy);
 
 
 
