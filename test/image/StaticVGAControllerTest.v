@@ -2,22 +2,12 @@
 
 module StaticVGAControllerTest;
 
-	parameter LeftBorder = 48;
-	parameter RightBorder = 16;
-	parameter TopBorder = 33;
-	parameter BottomBorder = 10;
 	parameter Width = 640;
 	parameter Height = 480;
-	parameter SyncCounterWidth = 2;
 
-	parameter LineAddressWidth = $clog2(Width);
-	parameter ColumnAddressWidth = $clog2(Height);
+	parameter LineAddressWidth = $clog2(Height);
+	parameter ColumnAddressWidth = $clog2(Width);
 
-	parameter LineCounterWidth = $clog2(Height+TopBorder+BottomBorder);
-	parameter ColumnCounterWidth = $clog2(Width+LeftBorder+RightBorder);
-
-	parameter MaxLine = Height+TopBorder+BottomBorder;
-	parameter MaxColumn = Width+LeftBorder+RightBorder;
 
 	reg clk;
 	reg rst;
@@ -27,17 +17,10 @@ module StaticVGAControllerTest;
 	wire horizontalSync;
 
 	StaticVGAController #(
-		.LeftBorder(LeftBorder),
-		.RightBorder(RightBorder),
-		.TopBorder(TopBorder),
-		.BottomBorder(BottomBorder),
 		.Width(Width),
 		.Height(Height),
-		.SyncCounterWidth(SyncCounterWidth),
 		.LineAddressWidth(LineAddressWidth),
-		.LineCounterWidth(LineCounterWidth),
-		.MaxLine(MaxLine),
-		.MaxColumn(MaxColumn)
+		.ColumnAddressWidth(ColumnAddressWidth)
 	)
 	vga (
 		.clk(clk),

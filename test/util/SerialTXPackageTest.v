@@ -5,6 +5,7 @@ module SerialTXPackageTest;
 	parameter AddressWidth = 2;
 	parameter WordWidth = 8;
 	parameter SerialTimerWidth = 3;
+	parameter QueueAddressWidth =1;
 
 	reg clk;
 	reg rst;
@@ -14,7 +15,7 @@ module SerialTXPackageTest;
 	wire busy;
 
 	SerialTXPackage #(
-		AddressWidth,WordWidth,SerialTimerWidth
+		AddressWidth,WordWidth,SerialTimerWidth,QueueAddressWidth
 	)
 	txPackage (
 		clk,rst,ce,data,tx,busy
@@ -39,9 +40,15 @@ module SerialTXPackageTest;
 		clk = 1'b0;
 		//ce = 1'b0;
 		#1;
-		for(i=0;i<2**(SerialTimerWidth*AddressWidth*WordWidth*2);i=i+1)
+		for(i=0;i<500;i=i+1)
 		begin
 			data = $random;
+			clk = ~clk; #1;
+		end
+		ce = 1'b0;
+		for(i=0;i<2000;i=i+1)
+		begin
+			data = 0;
 			clk = ~clk; #1;
 		end
 		$finish;

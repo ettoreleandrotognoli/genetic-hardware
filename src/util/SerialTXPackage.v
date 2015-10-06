@@ -4,6 +4,7 @@
 `include "io/SerialTx.v"
 `include "util/Queue.v"
 `include "util/Multiplex.v"
+`include "util/BorderDetector.v"
 
 module SerialTXPackage #(
 	parameter AddressWidth = 2,
@@ -22,61 +23,49 @@ module SerialTXPackage #(
 	wire txCe;
 	wire [WordWidth-1:0]txData;
 	wire txBusy;
-
 	wire queuePush;
 	wire queuePull;
-	wire [WordWidth-1:0]queueD;
-	wire [WordWidth-1:0]queueQ;
+	wire [2**AddressWidth*WordWidth-1:0]queueQ;
 	wire queueVoid;
 	wire queueFull;
-
+	wire queueCe;
 	reg work = 1'b0;
 	reg [AddressWidth-1:0]counter = {AddressWidth{1'b0}};
-	reg [2**AddressWidth*WordWidth-1:0]dataBuffer = {2**AddressWidth*WordWidth{1'b0}};
+
+	
+
+	assign queuePull = ~txBusy & ~queueVoid & queueCe;
+
+	Queue
+		#(.Width(2**AddressWidth*WordWidth),.AddressWidth(QueueAddressWidth))
+	queue 
+		(.clk(clk),.rst(rst),.push(ce&~queueFull),.pull(queuePull),.D(data),.Q(queueQ),.void(queueVoid),.full(queueFull));
+
+	assign txCe =  ~queueVoid & ~txBusy;
 
 	SerialTx
 		#(.Width(WordWidth),.TimerWidth(SerialTimerWidth))
 	serialTx
 		(.clk(clk),.rst(rst),.ce(txCe),.D(txData),.tx(tx),.busy(txBusy));
 
-	Queue
-		#(.Width(WordWidth),.AddressWidth(QueueAddressWidth))
-	queue 
-		(.clk(~clk),.rst(rst),.push(queuePush),.pull(queuePull),.D(queueD),.Q(queueQ),.void(queueVoid),.full(queueFull));
+	BorderDetector
+	bdQueue(.clk(clk),.rst(rst),.D(counter=={AddressWidth{1'b1}}),.up(queueCe),.down());
 
 	Multiplex
 		#(.Width(WordWidth),.AddressSize(AddressWidth))
 	mux
-		(.D(dataBuffer),.S(~counter),.Q(queueD));
+		(.D(queueQ),.S(~counter),.Q(txData));
 
-	assign busy = work;
-	assign txCe =  ~queueVoid & ~txBusy;
-	assign queuePull = ~txBusy & ~queueVoid;
-	assign txData = queueQ;
-	assign queuePush = work & ~queueFull;
-	
-	always @(posedge clk or posedge rst) begin
+	assign busy = queueFull;
+
+	always @(negedge txBusy or posedge rst) begin
 		if (rst)
 		begin
-			work = 1'b0;
-			counter = {AddressWidth{1'b0}};
-			dataBuffer = {2**AddressWidth*WordWidth{1'b0}};
-		end
-		else if (ce & !work)
-		begin
-			dataBuffer = data;
-			work = 1'b1;
 			counter = {AddressWidth{1'b0}};
 		end
-		else if (work)
+		else//if (~txBusy)
 		begin
-			if (counter == {AddressWidth{1'b1}})
-			begin
-				work = 1'b0;
-			end
-			else begin
-				counter = counter + 1'b1;
-			end
+			counter = counter + 1'b1;
 		end
 	end
 
