@@ -35,6 +35,7 @@ wire powerClock;
 wire pwmClk;
 wire error;
 wire finish;
+wire clock;
 
 ClockDivisor #(24,6777216) powerupTimer (clk,1'b0,powerClock);
 
@@ -42,14 +43,8 @@ ClockDivisor #(24,6777216) powerupTimer (clk,1'b0,powerClock);
 ClockDivisor #(3,0) clockDivisorRx (clk,rst,serialClock);
 ClockDivisor #(2,0) mainClock (clk,rst,clock);
 
-//ServoTx #(.Resolution(6),.AddressWidth(1)) servo(clk,rst,servoWe,data[7:2],1'b0,servoclk,servos);
-//SerialRx #(.Width(8),.TimerWidth(8)) serialRx(serialClock,rst,rx,data,rxFinish);
-//SerialTXPackage #(.AddressWidth(2),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(3)) serialTx(serialClock,rst,rxFinish & ~txBusy,32'b00000000111111111010111100101000,tx,txBusy);
-//Pwm #(.Resolution(8),.AddressWidth(3)) ledsPwm(clk,rst,pwmWe,data,ledAddress,pwmClk,leds);
-//Dilate #(.Width(3),.Height(3)) dilate({ledAddress,ledAddress,ledAddress});
 
-DebugMorphologicGeneticAlgorithm debug(clock,rst,serialClock,tx,finish);
-//DebugMorphologicProcessor debug(clock,rst,serialClock,tx);
+DebugMorphologicGeneticAlgorithm debug(clock,rst,serialClock,rx,tx,finish);
 always @(posedge powerClock)
 begin
 	if(powerClock)

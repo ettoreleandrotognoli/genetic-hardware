@@ -72,8 +72,10 @@ MorphologicProcessor
 processor
 	(clk,rst,ce,image,el,morphOp,morphInSelect,logicOp,opCounter,imageAcc);
 
+
+	
 SerialTXPackage
-	#(.AddressWidth(2),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(2))
+	#(.AddressWidth(2),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(1))
 serialTx
 	(serialClk,rst,serialCe,imageAcc,tx,serialBusy);
 

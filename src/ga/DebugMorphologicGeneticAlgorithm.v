@@ -3,6 +3,7 @@
 
 `include "ga/MorphologicGeneticAlgorithm.v"
 `include "util/SerialTXPackage.v"
+`include "util/SerialRXPackage.v"
 //`include "io/Pwm.v"
 //`include "io/SerialTx.v"
 //`include "io/SerialRx.v"
@@ -20,20 +21,24 @@ module DebugMorphologicGeneticAlgorithm #(
 	input clk,
 	input rst,
 	input serialClk,
-	//input rx,
+	input rx,
 	output tx,
 	//output error,
 	output finish
 );
 
-	reg [ImageHeight*ImageWidth-1:0]origin;
-	reg [ImageWidth*ImageHeight-1:0]objetive;
+	/*reg [ImageHeight*ImageWidth-1:0]origin;
+	reg [ImageWidth*ImageHeight-1:0]objetive;*/
 	wire [IndividualWidth-1:0]bestIndividual;
 	wire [ErrorWidth-1:0]bestError;
 	wire cycle;
-	wire [7:0]rxData;
-	wire rxFinish;
+	wire [63:0]rxData;
+	wire [ImageHeight*ImageWidth-1:0]origin = rxData[63:32];
+	wire[ImageWidth*ImageHeight-1:0]objetive = rxData[31:0];
+	wire rxVoid;
+	wire rxFull;
 	wire txBusy;
+	wire rxPull;
 
 	MorphologicGeneticAlgorithm #(
 		.ImageWidth(ImageWidth),
@@ -46,7 +51,7 @@ module DebugMorphologicGeneticAlgorithm #(
 	)
 	ga (
 		.clk(clk),
-		.rst(rst),
+		.rst(rxVoid),
 		.origin(origin),
 		.objetive(objetive),
 		.bestIndividual(bestIndividual),
@@ -54,58 +59,21 @@ module DebugMorphologicGeneticAlgorithm #(
 		.cycle(cycle)
 	);
 
-	/*SerialRx #(
-		.Width(8),
-		.TimerWidth(8)
-	)
-	serialRx (
-		.clk(clk),
-		.rst(rst),
-		.rx(rx),
-		.Q(rxData),
-		.finish(rxFinish)
-	);
-
-	SerialTx #(
-		.Width(8),
-		.TimerWidth(8)
-	)
-	serialTx(
-		.clk(clk),
-		.rst(rst),
-		.ce(cycle),
-		.D(counter[31:25]),
-		.tx(tx),
-		.buzy()
-	);
-
-	Pwm #(
-		.Resolution(ErrorWidth),
-		.AddressWidth(0)
-	)
-	errorPwm(
-		.clk(clk),
-		.rst(rst),
-		.ce(cycle),
-		.D(bestError),
-		.pwmclk(clk),
-		.O(error)
-	);*/
 
 	wire running = bestError!={ErrorWidth{1'b0}};
 	assign finish = ~running;
 	
-	reg [31:0] counter = {32{1'b0}};
+	reg [15:0] counter = {16{1'b0}};
 	reg serialCe;
 
-	always @(posedge cycle or posedge rst) begin
-		if (rst) begin
-			counter = {32{1'b0}};
+	always @(posedge cycle or posedge rxVoid) begin
+		if (rxVoid) begin
+			counter = {16{1'b0}};
 			
-			origin = {
-				8'b00000000,
+			/*origin = {
 				8'b00010000,
-				8'b00000000,
+				8'b00111000,
+				8'b00010000,
 				8'b00000000
 			};
 			objetive = {
@@ -113,31 +81,28 @@ module DebugMorphologicGeneticAlgorithm #(
 				8'b01111100,
 				8'b00111000,
 				8'b00010000
-			};
+			};*/
 		end
 		else begin
-			counter = counter + 1;
+			if(running)
+			begin
+				counter = counter + 1'b1;
+			end
+			
 		end
 	end
 	
-	always @(posedge clk or posedge rst) begin
-		if (rst) begin
-			serialCe = 1'b0;
-		end
-		else if(~serialCe & ~running)
-		begin
-			serialCe = 1'b1;
-		end
-		else if(serialCe & ~running & txBusy)
-		begin
-			serialCe = 1'b0;
-		end
-	end
+	
+	SerialRXPackage
+		#(.AddressWidth(3),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(1))
+	serialRx
+		(serialClk,rst,rx,~running & ~rxVoid,rxData,rxVoid,rxFull);
+	
 
 	SerialTXPackage
-		#(.AddressWidth(3),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(3))
+		#(.AddressWidth(3),.WordWidth(8),.SerialTimerWidth(8),.QueueAddressWidth(1))
 	serialTx
-		(serialClk,rst,serialCe,{counter,bestIndividual},tx,txBusy);
+		(serialClk,rst,~running & ~txBusy,{{16-ErrorWidth{1'b0}},bestError,counter,bestIndividual},tx,txBusy);
 
 
 

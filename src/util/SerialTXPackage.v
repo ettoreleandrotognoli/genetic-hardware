@@ -29,7 +29,6 @@ module SerialTXPackage #(
 	wire queueVoid;
 	wire queueFull;
 	wire queueCe;
-	reg work = 1'b0;
 	reg [AddressWidth-1:0]counter = {AddressWidth{1'b0}};
 
 	
