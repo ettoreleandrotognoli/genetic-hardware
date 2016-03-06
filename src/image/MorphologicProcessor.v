@@ -5,8 +5,8 @@
 `include "morphology/MorphologicUnit.v"
 
 module MorphologicProcessor #(
-	parameter ImageWidth = 16,
-	parameter ImageHeight =16,
+	parameter ImageWidth = 32,
+	parameter ImageHeight =32,
 	parameter OpCounterWidth = 2
 ) (
 	input clk,

@@ -35,7 +35,7 @@ wire powerClock;
 wire pwmClk;
 wire error;
 wire finish;
-wire clock;
+//wire clock;
 
 ClockDivisor #(24,6777216) powerupTimer (clk,1'b0,powerClock);
 
